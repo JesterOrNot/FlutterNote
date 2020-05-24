@@ -1,14 +1,23 @@
 FROM gitpod/workspace-flutter
+USER root
+
+ENV ANDROID_HOME /opt/android-sdk-linux
+
+RUN apt update -qq && apt install zip unzip
+
+RUN cd /opt && \
+    wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
+    unzip -q *.zip -d ${ANDROID_HOME} && \
+    rm *.zip
+
+RUN chmod -R 777 ${ANDROID_HOME}
+
+RUN apt clean -qq
 
 USER gitpod
 
-RUN sudo add-apt-repository ppa:maarten-fonville/android-studio \
-    && sudo apt-get update -qq \
-    && sudo apt-get install -yq --no-install-recommends \
-        android-sdk \
-        lib32stdc++6 \
-        android-studio \
-        android-sdk-build-tools \
-        android-sdk \
-        android-sdk-platform-23 \
-    && sudo rm -rf /var/lib/apt/lists/*
+ENV ANDROID_HOME=/opt/android-sdk-linux
+
+ENV PATH=${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH}
+
+RUN ["/bin/bash", "-c", "source ~/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.232-open"]
