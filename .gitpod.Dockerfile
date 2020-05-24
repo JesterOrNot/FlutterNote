@@ -4,7 +4,7 @@ USER gitpod
 
 RUN sudo add-apt-repository ppa:maarten-fonville/android-studio \
     && sudo apt-get update -qq \
-    && sudo apt-get install -yq –install-suggests \
+    && sudo apt-get install -yq -–install-suggests \
         android-sdk \
         zip \
         unzip \
