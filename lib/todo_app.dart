@@ -12,10 +12,12 @@ class _TodoAppState extends State<TodoApp> {
 
   void handleSubmit(String text) {
     Navigator.of(context).pop();
-    setState(() {
-      _notes = [..._notes, text];
-    });
-    controller.clear();
+    if(text.length != 0) {
+      setState(() {
+        _notes = [..._notes, text];
+      });
+      controller.clear();
+    }
   }
 
   void _addNote() {
