@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:FlutterNote/list_item.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,8 @@ class TodoApp extends StatefulWidget {
 }
 
 class _TodoAppState extends State<TodoApp> {
-  List<String> _notes = [];
+  Future<SharedPreferences> _sprefs = SharedPreferences.getInstance();
+  List<String> _notes;
   TextEditingController controller = TextEditingController();
 
   void handleSubmit(String text) {
@@ -18,6 +20,30 @@ class _TodoAppState extends State<TodoApp> {
       });
       controller.clear();
     }
+  }
+
+  Future<Null> getSharedPrefs() async {
+    final SharedPreferences prefs = await _sprefs;
+    List<String> notes = prefs.getStringList('notes');
+    setState(() {
+      this._notes = notes;
+    });
+  }
+
+  Future<Null> updateList()  async  {
+    final SharedPreferences prefs = await _sprefs;
+    setState(() {
+      _notes = [..._notes, controller.value.text];
+      prefs.setStringList('notes', _notes);
+    });
+  }
+
+
+  @override
+  void initState() async {
+    super.initState();
+    this._notes = [];
+    getSharedPrefs();
   }
 
   void _addNote() {
@@ -36,9 +62,7 @@ class _TodoAppState extends State<TodoApp> {
                 child: Text("SUBMIT"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  setState(() {
-                    _notes = [..._notes, controller.value.text];
-                  });
+                  updateList();
                   controller.clear();
                 },
               ),
