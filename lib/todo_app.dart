@@ -59,7 +59,7 @@ class _TodoAppState extends State<TodoApp> {
     return Scaffold(
         body: ListView(
           children: _notes
-              .map((text) => ListItem(name: text))
+              .map((text) => ListItem(text: text))
               .toList(growable: false),
           shrinkWrap: true,
         ),
