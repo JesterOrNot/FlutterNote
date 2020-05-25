@@ -11,13 +11,13 @@ class _TodoAppState extends State<TodoApp> {
   TextEditingController controller = TextEditingController();
 
   void handleSubmit(String text) {
-    Navigator.of(context).pop();
+    controller.clear();
     if(text.length != 0) {
       setState(() {
         _notes = [..._notes, text];
       });
-      controller.clear();
     }
+    Navigator.of(context).pop();
   }
 
   void _addNote() {
@@ -33,20 +33,10 @@ class _TodoAppState extends State<TodoApp> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text("SUBMIT"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _notes = [..._notes, controller.value.text];
-                  });
-                  controller.clear();
-                },
-              ),
-              FlatButton(
                 child: Text('CANCEL'),
                 onPressed: () {
-                  Navigator.of(context).pop();
                   controller.clear();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
