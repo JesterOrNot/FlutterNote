@@ -12,11 +12,12 @@ class _TodoAppState extends State<TodoApp> {
 
   void handleSubmit(String text) {
     controller.clear();
-    if(text.length != 0) {
+    if (text.length != 0) {
       setState(() {
         _notes = [..._notes, text];
       });
     }
+    print(_notes);
     Navigator.of(context).pop();
   }
 
@@ -47,10 +48,20 @@ class _TodoAppState extends State<TodoApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView(
-          children: _notes
-              .map((text) => ListItem(text: text))
-              .toList(growable: false),
+        body: ListView.builder(
+          itemCount: _notes.length,
+          itemBuilder: (context, index) {
+            final item = _notes[index];
+            return Dismissible(
+              key: Key(item),
+              child: ListItem(text: _notes[index]),
+              onDismissed: (direction) => {
+                setState(() {
+                  _notes.removeAt(index);
+                })
+              },
+            );
+          },
           shrinkWrap: true,
         ),
         floatingActionButton: FloatingActionButton(
