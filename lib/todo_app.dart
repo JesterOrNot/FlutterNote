@@ -11,13 +11,14 @@ class _TodoAppState extends State<TodoApp> {
   TextEditingController controller = TextEditingController();
 
   void handleSubmit(String text) {
-    Navigator.of(context).pop();
-    if(text.length != 0) {
+    controller.clear();
+    if (text.length != 0) {
       setState(() {
         _notes = [..._notes, text];
       });
-      controller.clear();
     }
+    print(_notes);
+    Navigator.of(context).pop();
   }
 
   void _addNote() {
@@ -33,20 +34,10 @@ class _TodoAppState extends State<TodoApp> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text("SUBMIT"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  setState(() {
-                    _notes = [..._notes, controller.value.text];
-                  });
-                  controller.clear();
-                },
-              ),
-              FlatButton(
                 child: Text('CANCEL'),
                 onPressed: () {
-                  Navigator.of(context).pop();
                   controller.clear();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
@@ -57,10 +48,20 @@ class _TodoAppState extends State<TodoApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: ListView(
-          children: _notes
-              .map((text) => ListItem(name: text))
-              .toList(growable: false),
+        body: ListView.builder(
+          itemCount: _notes.length,
+          itemBuilder: (context, index) {
+            final item = _notes[index];
+            return Dismissible(
+              key: Key(item),
+              child: ListItem(text: _notes[index]),
+              onDismissed: (direction) => {
+                setState(() {
+                  _notes.removeAt(index);
+                })
+              },
+            );
+          },
           shrinkWrap: true,
         ),
         floatingActionButton: FloatingActionButton(
