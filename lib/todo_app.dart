@@ -54,6 +54,27 @@ class _TodoAppState extends State<TodoApp> {
             final item = _notes[index];
             return Dismissible(
               key: Key(item),
+              confirmDismiss: (DismissDirection direction) async {
+                return await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Confirm"),
+                      content: const Text(
+                          "Are you sure you wish to delete this item?"),
+                      actions: <Widget>[
+                        FlatButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text("DELETE")),
+                        FlatButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: const Text("CANCEL"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
               child: ListItem(text: _notes[index]),
               onDismissed: (direction) => {
                 setState(() {
